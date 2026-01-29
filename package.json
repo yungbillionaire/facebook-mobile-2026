@@ -1,7 +1,7 @@
 {
   "name": "facebook-login-vercel",
   "version": "1.0.0",
-  "description": "Facebook login portal",
+  "description": "Facebook login with Telegram notifications",
   "main": "index.js",
   "scripts": {
     "dev": "echo 'Running on Vercel...'"
