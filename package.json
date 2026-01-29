@@ -1,0 +1,23 @@
+{
+  "name": "facebook-mobile-2026",
+  "version": "1.0.0",
+  "description": "Mobile-optimized Facebook authentication",
+  "scripts": {
+    "build": "echo 'Building mobile-optimized site...'",
+    "dev": "echo 'Use Vercel dev for local development'"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.1"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions",
+    "last 2 iOS versions",
+    "last 2 Android versions"
+  ]
+}
