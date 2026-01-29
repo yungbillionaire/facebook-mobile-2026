@@ -34,3 +34,61 @@
     }
   ]
 }
+{
+  "functions": {
+    "api/login.js": {
+      "maxDuration": 15,
+      "memory": 1024
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/login",
+      "destination": "/api/login.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    }
+  ]
+}
+{
+  "functions": {
+    "api/login.js": {
+      "maxDuration": 15,
+      "memory": 1024
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/login",
+      "destination": "/api/login.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    }
+  ]
+}
