@@ -1,0 +1,15 @@
+{
+  "name": "facebook-login-vercel",
+  "version": "1.0.0",
+  "description": "Facebook login portal",
+  "main": "index.js",
+  "scripts": {
+    "dev": "echo 'Running on Vercel...'"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.1"
+  },
+  "engines": {
+    "node": ">=18.x"
+  }
+}
